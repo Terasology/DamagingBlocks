@@ -1,0 +1,9 @@
+﻿{
+     "id" : "DamagingBlocks",
+     "version" : "0.1.1-SNAPSHOT",
+     "author" : "Sérgio Domingues <sergio.mieic@gmail.com>",
+     "displayName" : "DamagingBlocks",
+     "description" : "Allows players to take damage from blocks.",
+     "dependencies" : [],
+     "isServerSideOnly" : false
+ }
