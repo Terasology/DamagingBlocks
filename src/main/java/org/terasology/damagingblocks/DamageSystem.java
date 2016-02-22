@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 MovingBlocks
+ * Copyright 2016 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,10 +37,6 @@ import org.terasology.world.BlockEntityRegistry;
 import org.terasology.world.WorldProvider;
 import org.terasology.world.block.Block;
 
-/**
- * Created by Sérgio Domingues(skit) on 29/11/2015.
- */
-
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class DamageSystem extends BaseComponentSystem implements UpdateSubscriberSystem {
     private static final Logger logger = LoggerFactory.getLogger(DamageSystem.class);
@@ -59,20 +55,13 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
 
     @Override
     public void update(float delta) {
-       //logger.info("update damaging");
-
         for (EntityRef entity : entityManager.getEntitiesWith(DamagingBlockComponent.class, LocationComponent.class)) {
             DamagingBlockComponent damaging = entity.getComponent(DamagingBlockComponent.class);
             LocationComponent loc = entity.getComponent(LocationComponent.class);
 
             long gameTime = time.getGameTimeInMs();
 
-            logger.info("percorre ##################");
-
             if (gameTime > damaging.nextDamageTime) {
-
-                logger.info("do damage$$$$$$$$$$$$$$$$$");
-
                 //damage the entity
                 EntityRef lavaBlock = blockEntityProvider.getBlockEntityAt(loc.getWorldPosition());
                 entity.send(new DoDamageEvent(damaging.blockDamage, EngineDamageTypes.PHYSICAL.get(), lavaBlock));
@@ -84,35 +73,29 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
     }
 
     @ReceiveEvent
-    public void onEnterBlock(OnEnterBlockEvent event, EntityRef entity){
-
-        logger.info("Function call");
-
+    public void onEnterBlock(OnEnterBlockEvent event, EntityRef entity) {
         //ignores "flying" lava
         //future rework will consider "flying" damage blocks
-        if(isAtHeadLevel(event.getCharacterRelativePosition(), entity))
+        if (isAtHeadLevel(event.getCharacterRelativePosition(), entity)) {
             return;
+        }
 
-        if(blockIsDamaging(event.getNewBlock())){
-
+        if (blockIsDamaging(event.getNewBlock())) {
             DamagingBlockComponent damaging = entity.getComponent(DamagingBlockComponent.class);
 
-            if(damaging == null){
-                logger.info("Create new component");
+            if (damaging == null) {
                 damaging = new DamagingBlockComponent();
                 damaging.nextDamageTime = time.getGameTimeInMs();
                 entity.addComponent(damaging);
-            }else{
+            } else {
                 damaging.nextDamageTime = time.getGameTimeInMs() + damaging.timeBetweenDamage;
                 entity.saveComponent(damaging);
             }
-        }
-        else{
+        } else {
             //check if it was damaged before and removes damaging component
             DamagingBlockComponent damagingOld = entity.getComponent(DamagingBlockComponent.class);
 
-            if(damagingOld != null){
-                logger.info("Destroy component");
+            if (damagingOld != null) {
                 //clean up damagingComponent
                 entity.removeComponent(DamagingBlockComponent.class);
             }
