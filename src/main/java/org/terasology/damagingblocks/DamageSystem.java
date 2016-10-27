@@ -30,7 +30,9 @@ import org.terasology.logic.characters.CharacterMovementComponent;
 import org.terasology.logic.characters.events.OnEnterBlockEvent;
 import org.terasology.logic.health.DoDamageEvent;
 import org.terasology.logic.health.EngineDamageTypes;
+import org.terasology.logic.inventory.PickupComponent;
 import org.terasology.logic.location.LocationComponent;
+import org.terasology.math.geom.Vector3f;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
 import org.terasology.world.BlockEntityRegistry;
@@ -68,6 +70,27 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
                 // set the next damage time
                 damaging.nextDamageTime = gameTime + damaging.timeBetweenDamage;
                 entity.saveComponent(damaging);
+            }
+        }
+
+        //Checks all pickable items to see if they're inside a lava block and destroys them if they are.
+        //Can be used to check for existence of components, but no blocks currently have damage components on them.
+        //Could just catch events that are sent from the position update where it checks if items transitioned to another block
+        for (EntityRef entity : entityManager.getEntitiesWith(PickupComponent.class))
+        {
+            LocationComponent loc = entity.getComponent(LocationComponent.class);
+            if (loc == null)
+            {
+                continue;
+            }
+
+            Vector3f vLocation = loc.getWorldPosition();
+
+            Block block = worldProvider.getBlock(vLocation);
+            //if (entity.hasComponent(DamagingBlockComponent.class))
+            if (block.isLava())
+            {
+                entity.destroy();
             }
         }
     }
