@@ -76,11 +76,9 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
         //Checks all pickable items to see if they're inside a lava block and destroys them if they are.
         //Can be used to check for existence of components, but no blocks currently have damage components on them.
         //Could just catch events that are sent from the position update where it checks if items transitioned to another block
-        for (EntityRef entity : entityManager.getEntitiesWith(PickupComponent.class))
-        {
+        for (EntityRef entity : entityManager.getEntitiesWith(PickupComponent.class)) {
             LocationComponent loc = entity.getComponent(LocationComponent.class);
-            if (loc == null)
-            {
+            if (loc == null) {
                 continue;
             }
 
@@ -88,8 +86,7 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
 
             Block block = worldProvider.getBlock(vLocation);
             //if (entity.hasComponent(DamagingBlockComponent.class))
-            if (block.isLava())
-            {
+            if (block.isLava()) {
                 entity.destroy();
             }
         }
