@@ -54,7 +54,13 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
 
     @In
     private WorldProvider worldProvider;
-
+    
+    /**
+     * Calculates when the player should be given damage and applies damage to the players
+     * Also destroies pickable items if touching DamagingBlocks
+     * @param delta   Not used in the method
+     * @return        void
+    */
     @Override
     public void update(float delta) {
         for (EntityRef entity : entityManager.getEntitiesWith(DamagingBlockComponent.class, LocationComponent.class)) {
@@ -91,7 +97,13 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
             }
         }
     }
-
+    /**
+        * Inflicts damage to the player if the player enters (starts touching) a DamagingBlock.
+        * The DamagingBlock will do not damage if it's at the head level of the player
+        * @param event    An event type variable which checks for the player entering a block (starting to touch)
+        * @param entity   The DamagingBlock
+        * @return         void
+.    */
     @ReceiveEvent
     public void onEnterBlock(OnEnterBlockEvent event, EntityRef entity) {
         //ignores "flying" lava
@@ -121,7 +133,12 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
             }
         }
     }
-
+    /**
+     * Checks if the block is at head level
+     * @param relativePosition       The position of the player
+     * @param entity                 The DamagingBlock
+     * @return                       Returns whether or not the block is at head level of the player
+    */
     private boolean isAtHeadLevel(Vector3i relativePosition, EntityRef entity) {
         CharacterMovementComponent characterMovementComponent = entity.getComponent(CharacterMovementComponent.class);
         return (int) Math.ceil(characterMovementComponent.height) - 1 == relativePosition.y;
@@ -129,6 +146,11 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
 
     //TODO: change to block.isDamaging() (it's not implemented)
     //working only for lava locks atm
+    /**
+     * Checks to see if the block is a lava block
+     * @param block      The damagingBlock
+     * @return           True if the block is a Lava block
+    */
     private boolean blockIsDamaging(Block block) {
         return block.isLava();
     }
