@@ -24,7 +24,7 @@ public class DamagingBlockComponent implements Component {
 
 ## DamageSystem
 
-The DamageSystem is the code which applies the damage to players or destroies blocks if on DamagingBLocks. 
+The DamageSystem is the code which applies the damage to players or destroys blocks if on DamagingBlocks. 
 
 There are two types of damage which the system deals:
 *Damage resulting from the player being inside the block (i.e. Player in a pool of Lava)
