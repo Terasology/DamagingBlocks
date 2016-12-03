@@ -57,9 +57,8 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
     
     /**
      * Calculates when the player should be given damage and applies damage to the players
-     * Also destroies pickable items if touching DamagingBlocks
+     * Also destroys pickable items if touching DamagingBlocks
      * @param delta   The time between frames (optional to account for lagging games)
-     * @return        void
     */
     @Override
     public void update(float delta) {
@@ -102,7 +101,6 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
         * The DamagingBlock will do not damage if it's at the head level of the player
         * @param event    An event type variable which checks for the player entering a block (starting to touch)
         * @param entity   The DamagingBlock
-        * @return         void
 .    */
     @ReceiveEvent
     public void onEnterBlock(OnEnterBlockEvent event, EntityRef entity) {
