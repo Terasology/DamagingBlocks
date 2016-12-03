@@ -58,7 +58,7 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
     /**
      * Calculates when the player should be given damage and applies damage to the players
      * Also destroies pickable items if touching DamagingBlocks
-     * @param delta   Not used in the method
+     * @param delta   The time between frames (optional to account for lagging games)
      * @return        void
     */
     @Override
