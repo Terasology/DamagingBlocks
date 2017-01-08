@@ -101,7 +101,7 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
         * Inflicts damage to the player if the player enters (starts touching) a DamagingBlock.
         * The DamagingBlock will do not damage if it's at the head level of the player
         * @param event    An event type variable which checks for the player entering a block (starting to touch)
-        * @param entity   The DamagingBlock
+        * @param entity   The thing (mainly player) that enters the DamagingBlock
     */
     @ReceiveEvent
     public void onEnterBlock(OnEnterBlockEvent event, EntityRef entity) {
@@ -136,7 +136,7 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
     /**
      * Checks if the block is at head level.
      * @param relativePosition       The position of the player
-     * @param entity                 The DamagingBlock
+     * @param entity                 The thing (mainly player) that enters the DamagingBlock
      * @return                       Returns whether or not the block is at head level of the player
     */
     private boolean isAtHeadLevel(Vector3i relativePosition, EntityRef entity) {
