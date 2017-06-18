@@ -26,7 +26,6 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
-import org.terasology.logic.characters.AliveCharacterComponent;
 import org.terasology.logic.characters.CharacterMovementComponent;
 import org.terasology.logic.characters.events.OnEnterBlockEvent;
 import org.terasology.logic.health.DoDamageEvent;
@@ -73,13 +72,10 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
             if (gameTime > damaging.nextDamageTime) {
                 //damage the entity
                 EntityRef lavaBlock = blockEntityProvider.getBlockEntityAt(loc.getWorldPosition());
-                logger.info(entity.toFullDescription());
-                if (entity.hasComponent(AliveCharacterComponent.class)) {
-                    entity.send(new DoDamageEvent(damaging.blockDamage, EngineDamageTypes.PHYSICAL.get(), lavaBlock));
-                    // set the next damage time
-                    damaging.nextDamageTime = gameTime + damaging.timeBetweenDamage;
-                    entity.saveComponent(damaging);
-                }
+                entity.send(new DoDamageEvent(damaging.blockDamage, EngineDamageTypes.PHYSICAL.get(), lavaBlock));
+                // set the next damage time
+                damaging.nextDamageTime = gameTime + damaging.timeBetweenDamage;
+                entity.saveComponent(damaging);
             }
         }
 
