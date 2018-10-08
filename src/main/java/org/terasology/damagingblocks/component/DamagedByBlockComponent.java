@@ -16,11 +16,13 @@
 package org.terasology.damagingblocks.component;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 
 /**
- * A block which damages entities that touch it.
+ * Marks entities which are being affected by damaging blocks.
  */
-public class DamagingBlockComponent implements Component {
-    public int timeBetweenDamage = 1000;
-    public int blockDamage;
+public class DamagedByBlockComponent implements Component {
+    @Replicate(FieldReplicateType.SERVER_TO_OWNER)
+    public long nextDamageTime;
 }
