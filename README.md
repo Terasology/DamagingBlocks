@@ -16,18 +16,10 @@ Defines the rate and amount of damage which would be inflicted on the player.
 <pre>
 public class DamagingBlockComponent implements Component {
     public int timeBetweenDamage = 1000;        //The rate (value in milliseconds) at which the damage is inflicted
-    public int blockDamage = 20;                //The damage the block inflicts to the player
-    @Replicate(FieldReplicateType.SERVER_TO_OWNER)
-    public long nextDamageTime;                 //Helper variable for the system to know when to inflict damage
+    public int blockDamage;                     //The damage the block inflicts to the player
 }
 </pre>
 
 ## DamageSystem
 
-The DamageSystem is the code which applies the damage to players or destroys blocks if on DamagingBlocks. 
-
-There are two types of damage which the system deals:
-*Damage resulting from the player being inside the block (i.e. Player in a pool of Lava)
-*Damage resulting from the player entering and touching the block (i.e. Player running into Cacti)
-
-For further details, please refer to the Javadocs at [DamagingSystems](https://github.com/Terasology/DamagingBlocks/blob/master/src/main/java/org/terasology/damagingblocks/DamageSystem.java)
+The DamageSystem is the code which applies the damage to players or destroys blocks if on DamagingBlocks.

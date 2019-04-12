@@ -18,6 +18,7 @@ package org.terasology.damagingblocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.damagingblocks.component.DamagingBlockComponent;
+import org.terasology.damagingblocks.component.DamagedByBlockComponent;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -57,31 +58,35 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
 
     /**
      * Calculates when the player should be given damage and applies damage to the players.
-     * Also destroys pickable items if touching DamagingBlocks
+     * Also destroys pickable items if inside DamagingBlocks
      *
      * @param delta The time between frames (optional to account for lagging games)
      */
     @Override
     public void update(float delta) {
-        for (EntityRef entity : entityManager.getEntitiesWith(DamagingBlockComponent.class, LocationComponent.class)) {
-            DamagingBlockComponent damaging = entity.getComponent(DamagingBlockComponent.class);
+        long gameTime = time.getGameTimeInMs();
+        
+        for (EntityRef entity : entityManager.getEntitiesWith(DamagedByBlockComponent.class, LocationComponent.class)) {
+            DamagedByBlockComponent damaged = entity.getComponent(DamagedByBlockComponent.class);
             LocationComponent loc = entity.getComponent(LocationComponent.class);
 
-            long gameTime = time.getGameTimeInMs();
-
-            if (gameTime > damaging.nextDamageTime) {
+            if (gameTime > damaged.nextDamageTime) {
                 //damage the entity
-                EntityRef lavaBlock = blockEntityProvider.getBlockEntityAt(loc.getWorldPosition());
-                entity.send(new DoDamageEvent(damaging.blockDamage, EngineDamageTypes.PHYSICAL.get(), lavaBlock));
-                // set the next damage time
-                damaging.nextDamageTime = gameTime + damaging.timeBetweenDamage;
-                entity.saveComponent(damaging);
+                EntityRef block = blockEntityProvider.getBlockEntityAt(loc.getWorldPosition());
+                DamagingBlockComponent damaging = block.getComponent(DamagingBlockComponent.class);
+                
+                if (damaging != null) {
+                    entity.send(new DoDamageEvent(damaging.blockDamage, EngineDamageTypes.PHYSICAL.get(), block));
+                    // set the next damage time
+                    damaged.nextDamageTime = gameTime + damaging.timeBetweenDamage;
+                    entity.saveComponent(damaged);
+                } else {
+                    entity.removeComponent(DamagedByBlockComponent.class);
+                }
             }
         }
 
-        //Checks all pickable items to see if they're inside a lava block and destroys them if they are.
-        //Can be used to check for existence of components, but no blocks currently have damage components on them.
-        //Could just catch events that are sent from the position update where it checks if items transitioned to another block
+        //Checks all pickable items to see if they're inside a damaging block and destroys them if they are.
         for (EntityRef entity : entityManager.getEntitiesWith(PickupComponent.class)) {
             LocationComponent loc = entity.getComponent(LocationComponent.class);
             if (loc == null) {
@@ -90,73 +95,27 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
 
             Vector3f vLocation = loc.getWorldPosition();
 
-            Block block = worldProvider.getBlock(vLocation);
-            //if (entity.hasComponent(DamagingBlockComponent.class))
-            if (block.isLava()) {
+            EntityRef block = blockEntityProvider.getBlockEntityAt(vLocation);
+            if (block.getComponent(DamagingBlockComponent.class) != null) {
                 entity.destroy();
             }
         }
     }
 
     /**
-     * Inflicts damage to the player if the player enters (starts touching) a DamagingBlock.
-     * The DamagingBlock will do not damage if it's at the head level of the player
-     *
-     * @param event  An event type variable which checks for the player entering a block (starting to touch)
-     * @param entity The thing (like a player) that enters the DamagingBlock
+     * Marks the player as possibly about to be damaged if they enter a new block.
+     * As the player entity hasn't actually been moved there yet and the event
+     * doesn't include the coordinates, checking that the block is actually damaging
+     * is deferred to later.
      */
     @ReceiveEvent
-    public void onEnterBlock(OnEnterBlockEvent event, EntityRef entity) {
-        //ignores "flying" lava
-        //future rework will consider "flying" damage blocks
-        if (isAtHeadLevel(event.getCharacterRelativePosition(), entity)) {
-            return;
-        }
-
-        if (blockIsDamaging(event.getNewBlock())) {
-            DamagingBlockComponent damaging = entity.getComponent(DamagingBlockComponent.class);
-
-            if (damaging == null) {
-                damaging = new DamagingBlockComponent();
-                damaging.nextDamageTime = time.getGameTimeInMs();
-                entity.addComponent(damaging);
-            } else {
-                damaging.nextDamageTime = time.getGameTimeInMs() + damaging.timeBetweenDamage;
-                entity.saveComponent(damaging);
-            }
-        } else {
-            //check if it was damaged before and removes damaging component
-            DamagingBlockComponent damagingOld = entity.getComponent(DamagingBlockComponent.class);
-
-            if (damagingOld != null) {
-                //clean up damagingComponent
-                entity.removeComponent(DamagingBlockComponent.class);
+    public void onEnterBlock(OnEnterBlockEvent event, EntityRef entity, LocationComponent loc) {
+        if (event.getCharacterRelativePosition().y == 0) {
+            if (entity.getComponent(DamagedByBlockComponent.class) == null) {
+                DamagedByBlockComponent damaged = new DamagedByBlockComponent();
+                damaged.nextDamageTime = time.getGameTimeInMs();
+                entity.addComponent(damaged);
             }
         }
-    }
-
-    /**
-     * Checks if the block is at head level.
-     *
-     * @param relativePosition The position of the player
-     * @param entity           The thing (like a player) that enters the DamagingBlock
-     * @return Returns whether or not the block is at head level of the player
-     */
-    private boolean isAtHeadLevel(Vector3i relativePosition, EntityRef entity) {
-        CharacterMovementComponent characterMovementComponent = entity.getComponent(CharacterMovementComponent.class);
-        return (int) Math.ceil(characterMovementComponent.height) - 1 == relativePosition.y;
-    }
-
-    //TODO: change to block.isDamaging() (it's not implemented)
-    //working only for lava locks atm
-
-    /**
-     * Checks to see if the block is a lava block.
-     *
-     * @param block The damagingBlock
-     * @return True if the block is a Lava block
-     */
-    private boolean blockIsDamaging(Block block) {
-        return block.isLava();
     }
 }
