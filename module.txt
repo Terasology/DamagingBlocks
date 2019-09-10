@@ -1,4 +1,4 @@
-﻿{
+{
      "id" : "DamagingBlocks",
      "version" : "0.2.0-SNAPSHOT",
      "author" : "Sérgio Domingues <sergio.mieic@gmail.com>",
