@@ -1,12 +1,12 @@
 {
-     "id" : "DamagingBlocks",
-     "version" : "0.3.0",
-     "author" : "Sérgio Domingues <sergio.mieic@gmail.com>",
-     "displayName" : "DamagingBlocks",
-     "description" : "Allows players to take damage from blocks.",
-     "dependencies" : [
-        {"id" : "Health", "minVersion" : "0.1.0"}
+     "id": "DamagingBlocks",
+     "version": "1.0.0",
+     "author": "Sérgio Domingues <sergio.mieic@gmail.com>",
+     "displayName": "DamagingBlocks",
+     "description": "Allows players to take damage from blocks.",
+     "dependencies": [
+        { "id": "Health", "minVersion": "0.1.0" }
      ],
-     "isServerSideOnly" : false,
+     "isServerSideOnly": false,
      "isLibrary": true
  }
