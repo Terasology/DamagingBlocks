@@ -5,7 +5,7 @@
      "displayName": "DamagingBlocks",
      "description": "Allows players to take damage from blocks.",
      "dependencies": [
-        { "id": "Health", "minVersion": "0.1.0" }
+        { "id": "Health", "minVersion": "1.0.0" }
      ],
      "isServerSideOnly": false,
      "isLibrary": true
