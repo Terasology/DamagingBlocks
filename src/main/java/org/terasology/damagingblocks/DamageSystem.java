@@ -15,6 +15,7 @@
  */
 package org.terasology.damagingblocks;
 
+import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.damagingblocks.component.DamagingBlockComponent;
@@ -32,7 +33,6 @@ import org.terasology.logic.health.event.DoDamageEvent;
 import org.terasology.logic.health.EngineDamageTypes;
 import org.terasology.logic.inventory.PickupComponent;
 import org.terasology.logic.location.LocationComponent;
-import org.terasology.math.geom.Vector3f;
 import org.terasology.registry.In;
 import org.terasology.world.BlockEntityRegistry;
 import org.terasology.world.WorldProvider;
@@ -62,7 +62,7 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
     @Override
     public void update(float delta) {
         long gameTime = time.getGameTimeInMs();
-        
+
         for (EntityRef entity : entityManager.getEntitiesWith(DamagedByBlockComponent.class, LocationComponent.class)) {
             DamagedByBlockComponent damaged = entity.getComponent(DamagedByBlockComponent.class);
             LocationComponent loc = entity.getComponent(LocationComponent.class);
@@ -71,7 +71,7 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
                 //damage the entity
                 EntityRef block = blockEntityProvider.getBlockEntityAt(loc.getWorldPosition());
                 DamagingBlockComponent damaging = block.getComponent(DamagingBlockComponent.class);
-                
+
                 if (damaging != null) {
                     entity.send(new DoDamageEvent(damaging.blockDamage, EngineDamageTypes.PHYSICAL.get(), block));
                     // set the next damage time
@@ -90,7 +90,7 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
                 continue;
             }
 
-            Vector3f vLocation = loc.getWorldPosition();
+            Vector3f vLocation = loc.getWorldPosition(new Vector3f());
 
             EntityRef block = blockEntityProvider.getBlockEntityAt(vLocation);
             if (block.getComponent(DamagingBlockComponent.class) != null) {
