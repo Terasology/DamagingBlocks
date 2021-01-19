@@ -69,7 +69,7 @@ public class DamageSystem extends BaseComponentSystem implements UpdateSubscribe
 
             if (gameTime > damaged.nextDamageTime) {
                 //damage the entity
-                EntityRef block = blockEntityProvider.getBlockEntityAt(loc.getWorldPosition());
+                EntityRef block = blockEntityProvider.getBlockEntityAt(loc.getWorldPosition(new Vector3f()));
                 DamagingBlockComponent damaging = block.getComponent(DamagingBlockComponent.class);
 
                 if (damaging != null) {
