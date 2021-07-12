@@ -10,4 +10,10 @@ import org.terasology.gestalt.entitysystem.component.Component;
 public class DamagingBlockComponent implements Component<DamagingBlockComponent> {
     public int timeBetweenDamage = 1000;
     public int blockDamage;
+
+    @Override
+    public void copy(DamagingBlockComponent other) {
+        this.timeBetweenDamage = other.timeBetweenDamage;
+        this.blockDamage = other.blockDamage;
+    }
 }

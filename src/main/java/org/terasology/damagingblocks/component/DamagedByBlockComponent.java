@@ -12,4 +12,9 @@ import org.terasology.gestalt.entitysystem.component.Component;
 public class DamagedByBlockComponent implements Component<DamagedByBlockComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_OWNER)
     public long nextDamageTime;
+
+    @Override
+    public void copy(DamagedByBlockComponent other) {
+        this.nextDamageTime = other.nextDamageTime;
+    }
 }
