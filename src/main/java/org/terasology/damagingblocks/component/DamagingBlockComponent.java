@@ -12,7 +12,7 @@ public class DamagingBlockComponent implements Component<DamagingBlockComponent>
     public int blockDamage;
 
     @Override
-    public void copy(DamagingBlockComponent other) {
+    public void copyFrom(DamagingBlockComponent other) {
         this.timeBetweenDamage = other.timeBetweenDamage;
         this.blockDamage = other.blockDamage;
     }

@@ -14,7 +14,7 @@ public class DamagedByBlockComponent implements Component<DamagedByBlockComponen
     public long nextDamageTime;
 
     @Override
-    public void copy(DamagedByBlockComponent other) {
+    public void copyFrom(DamagedByBlockComponent other) {
         this.nextDamageTime = other.nextDamageTime;
     }
 }
