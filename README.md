@@ -14,7 +14,7 @@ Essentially, the custom block's prefab would have a DamagingBlockComponent attac
 Defines the rate and amount of damage which would be inflicted on the player.
 
 <pre>
-public class DamagingBlockComponent implements Component {
+public class DamagingBlockComponent implements Component<DamagingBlockComponent> {
     public int timeBetweenDamage = 1000;        //The rate (value in milliseconds) at which the damage is inflicted
     public int blockDamage;                     //The damage the block inflicts to the player
 }
