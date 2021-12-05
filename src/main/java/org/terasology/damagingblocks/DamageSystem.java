@@ -23,19 +23,19 @@ import org.terasology.damagingblocks.component.DamagingBlockComponent;
 import org.terasology.engine.core.Time;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.engine.logic.characters.events.OnEnterBlockEvent;
 import org.terasology.engine.logic.health.EngineDamageTypes;
-import org.terasology.module.health.events.DoDamageEvent;
 import org.terasology.engine.logic.inventory.PickupComponent;
 import org.terasology.engine.logic.location.LocationComponent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.world.BlockEntityRegistry;
 import org.terasology.engine.world.WorldProvider;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
+import org.terasology.module.health.events.DoDamageEvent;
 
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class DamageSystem extends BaseComponentSystem implements UpdateSubscriberSystem {
